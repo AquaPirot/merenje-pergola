@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PERGOLA MEASURE v1.5</title>
+    <title>PERGOLA MEASURE v1.6</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -24,17 +24,14 @@
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: var(--font-data);
+            background-color: var(--bg); color: var(--text-main); font-family: var(--font-data);
             margin: 0; padding: 15px; min-height: 100vh;
             background-image: radial-gradient(circle at 50% 100%, #1e1b4b 0%, #09090b 100%);
             background-attachment: fixed;
         }
 
-        h1, h2, h3 { font-family: var(--font-header); letter-spacing: 1px; margin: 0; }
+        h1, h2, h3 { font-family: var(--font-header); letter-spacing: 1px; }
 
-        /* DASHBOARD */
         .search-box {
             width: 100%; background: var(--card-bg); border: 1px solid var(--glass-border);
             padding: 12px; border-radius: 10px; color: white; margin-bottom: 20px;
@@ -46,36 +43,37 @@
             border-radius: 15px; padding: 15px; position: relative; backdrop-filter: blur(10px);
         }
 
-        .card-price { color: var(--neon-green); font-weight: bold; font-size: 1.1rem; margin-top: 5px; }
-
         /* MODAL */
         .modal {
             display: none; position: fixed; inset: 0; background: #000;
             z-index: 1000; padding: 15px; overflow-y: auto;
         }
-        .section-title { color: var(--neon-purple); border-bottom: 1px solid var(--neon-purple); margin: 20px 0 10px 0; }
+        .section-title { color: var(--neon-purple); border-bottom: 1px solid var(--neon-purple); margin: 25px 0 10px 0; padding-bottom: 5px; }
         
         .form-group { margin-bottom: 10px; }
-        label { font-size: 0.7rem; color: #888; text-transform: uppercase; display: block; }
+        label { font-size: 0.65rem; color: #888; text-transform: uppercase; display: block; margin-bottom: 3px; }
         input, select, textarea {
             background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             padding: 10px; border-radius: 8px; color: #fff; width: 100%; font-family: var(--font-data);
         }
 
-        /* DYNAMIC ITEMS */
+        /* STAVKE KONTEJNER */
         .item-box {
-            background: rgba(255,255,255,0.03); border: 1px dashed var(--neon-purple);
-            padding: 10px; border-radius: 10px; margin-bottom: 15px; position: relative;
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(188, 19, 254, 0.3);
+            padding: 15px; border-radius: 12px; margin-bottom: 20px; position: relative;
         }
-        .remove-item { position: absolute; top: 5px; right: 5px; color: red; font-size: 0.8rem; }
-        .m2-display { color: var(--neon-cyan); font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
+        .remove-item { position: absolute; top: 10px; right: 10px; color: #ff003c; font-size: 0.7rem; font-weight: bold; }
+        
+        .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .full-row { grid-column: span 2; }
+        .m2-display { color: var(--neon-cyan); font-size: 0.8rem; font-weight: bold; margin-top: 5px; text-align: right; }
 
         .btn {
             padding: 12px; border-radius: 8px; border: none; font-family: var(--font-header);
-            font-size: 1rem; width: 100%; cursor: pointer; text-align: center; display: block;
+            font-size: 1.1rem; width: 100%; cursor: pointer; text-align: center; display: block;
         }
-        .btn-add { background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); margin: 10px 0; }
-        .btn-save { background: var(--neon-purple); color: #fff; margin-top: 20px; font-size: 1.4rem; }
+        .btn-add { background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); margin: 15px 0; }
+        .btn-save { background: var(--neon-purple); color: #fff; margin-top: 30px; font-size: 1.5rem; box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); }
 
         .fab {
             position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
@@ -83,18 +81,21 @@
             color: white; box-shadow: 0 0 20px rgba(188, 19, 254, 0.5); z-index: 99;
         }
 
-        /* TECH SHEET FOR IMAGE */
+        /* TECH SHEET STYLE */
         #tech-sheet {
-            position: fixed; left: -9999px; width: 800px; background: #fff; color: #000; padding: 40px;
+            position: fixed; left: -9999px; width: 850px; background: #fff; color: #000; padding: 40px; font-family: sans-serif;
         }
-        .sheet-item-row { border-bottom: 1px solid #ddd; padding: 15px 0; }
+        .s-item-header { background: #000; color: #fff; padding: 10px; margin-top: 20px; font-family: 'Bebas Neue'; }
+        .s-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .s-label { font-size: 0.7rem; color: #666; text-transform: uppercase; }
+        .s-val { font-size: 1.1rem; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <header style="margin-bottom: 20px;">
-        <h1 style="font-size: 2.2rem;">PERGOLA <span style="color: var(--neon-purple);">MEASURE</span></h1>
-        <div style="font-size: 0.8rem; opacity: 0.5;">PRODAJA & TEHNIČKA SPECIFIKACIJA</div>
+    <header>
+        <h1 style="font-size: 2.2rem; margin:0;">PERGOLA <span style="color: var(--neon-purple);">MEASURE</span></h1>
+        <div style="font-size: 0.8rem; opacity: 0.5; letter-spacing: 2px;">TEHNIČKA SPECIFIKACIJA v1.6</div>
     </header>
 
     <input type="text" class="search-box" id="search" placeholder="Pretraži klijente..." oninput="render()">
@@ -105,50 +106,48 @@
 
     <!-- MODAL -->
     <div id="measureModal" class="modal">
-        <h2>PODACI O KLIJENTU</h2>
+        <h2 style="color: var(--neon-purple);">KLIJENT & LOKACIJA</h2>
         <input type="hidden" id="editId">
         
-        <div class="form-group"><label>Ime i prezime</label><input type="text" id="client"></div>
-        <div class="form-group"><label>📍 Lokacija</label><input type="text" id="location"></div>
-        <div class="form-group"><label>📞 Telefon</label><input type="tel" id="phone"></div>
-        <div class="form-group"><label>Status</label>
-            <select id="status">
-                <option value="Ponuda">Samo Ponuda</option>
-                <option value="Dogovoreno">Dogovoreno / Potpisano</option>
-                <option value="Hitno">Hitno merenje</option>
-            </select>
+        <div class="form-group"><label>Ime Klijenta</label><input type="text" id="client"></div>
+        <div class="fields-grid">
+            <div class="form-group"><label>📍 Lokacija</label><input type="text" id="location"></div>
+            <div class="form-group"><label>📞 Telefon</label><input type="tel" id="phone"></div>
         </div>
 
-        <h3 class="section-title">STAVKE (PERGOLE / STAKLA)</h3>
+        <h2 class="section-title">SPECIFIKACIJA ELEMENATA</h2>
         <div id="itemsContainer"></div>
-        <button class="btn btn-add" onclick="addItem()">+ DODAJ STAVKU (PERGOLA/STAKLO)</button>
+        <button class="btn btn-add" onclick="addItem()">+ DODAJ PERGOLU ILI STAKLO</button>
 
-        <h3 class="section-title">FINANSIJE I NAPOMENA</h3>
-        <div class="form-group"><label>Dogovorena ukupna cena (€)</label><input type="number" id="totalPrice"></div>
-        <div class="form-group"><label>Plaćen avans (€)</label><input type="number" id="deposit"></div>
-        <div class="form-group"><label>Napomena</label><textarea id="notes" rows="3"></textarea></div>
+        <h2 class="section-title">FINANSIJE I NAPOMENA</h2>
+        <div class="fields-grid">
+            <div class="form-group"><label>Ukupna Cena (€)</label><input type="number" id="totalPrice"></div>
+            <div class="form-group"><label>Avans (€)</label><input type="number" id="deposit"></div>
+        </div>
+        <div class="form-group"><label>Glavna Napomena</label><textarea id="notes" rows="3"></textarea></div>
 
-        <button class="btn btn-save" onclick="saveProject()">SAČUVAJ SVE</button>
-        <button class="btn" style="background:transparent; color:grey;" onclick="closeModal()">ODUSTANI</button>
+        <button class="btn btn-save" onclick="saveProject()">SAČUVAJ ZAPISNIK</button>
+        <button class="btn" style="background:transparent; color:grey; margin-top:10px;" onclick="closeModal()">ODUSTANI</button>
     </div>
 
-    <!-- TECH SHEET TEMPLATE -->
+    <!-- TECH SHEET (Hidden) -->
     <div id="tech-sheet">
-        <div style="border-bottom: 4px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
-            <h1 id="s-client" style="font-size: 2.5rem; margin:0;"></h1>
-            <p id="s-loc" style="font-size: 1.2rem; margin:5px 0;"></p>
+        <div style="border-bottom: 5px solid #000; padding-bottom: 10px;">
+            <h1 id="s-client" style="font-size: 3rem; margin:0;"></h1>
+            <p id="s-loc" style="font-size: 1.3rem; margin:5px 0; font-weight: bold;"></p>
             <p id="s-date" style="opacity: 0.6;"></p>
         </div>
         <div id="s-items"></div>
-        <div style="margin-top: 30px; background: #f0f0f0; padding: 20px; border-radius: 10px;">
-            <h2 style="margin-top:0;">FINANSIJSKI PREGLED:</h2>
-            <p id="s-price" style="font-size: 1.5rem; font-weight: bold;"></p>
-            <p id="s-notes"></p>
+        <div style="margin-top: 30px; border: 2px solid #000; padding: 20px;">
+            <h2 style="margin:0 0 10px 0;">FINANSIJSKI PREGLED:</h2>
+            <p id="s-price" style="font-size: 1.8rem; font-weight: bold; margin:0;"></p>
+            <p id="s-notes" style="margin-top:10px; font-style: italic;"></p>
         </div>
     </div>
 
     <script>
-        let projects = JSON.parse(localStorage.getItem('pergola_pro_v1.5')) || [];
+        let projects = JSON.parse(localStorage.getItem('pergola_measure_v1.6')) || [];
+        const PHASES = ['Merenje', 'Proizvodnja', 'Spreman', 'Montaža'];
 
         function openModal(id = null) {
             const modal = document.getElementById('measureModal');
@@ -160,7 +159,6 @@
                 document.getElementById('client').value = p.client;
                 document.getElementById('location').value = p.location;
                 document.getElementById('phone').value = p.phone;
-                document.getElementById('status').value = p.status;
                 document.getElementById('totalPrice').value = p.totalPrice;
                 document.getElementById('deposit').value = p.deposit;
                 document.getElementById('notes').value = p.notes;
@@ -168,7 +166,7 @@
             } else {
                 document.getElementById('editId').value = "";
                 document.querySelectorAll('.modal input, .modal textarea').forEach(i => i.value = "");
-                addItem(); // Dodaj jednu praznu stavku odmah
+                addItem(); 
             }
             modal.style.display = 'block';
         }
@@ -177,29 +175,43 @@
             const container = document.getElementById('itemsContainer');
             const itemDiv = document.createElement('div');
             itemDiv.className = 'item-box';
-            const itemId = Date.now() + Math.random();
             
             itemDiv.innerHTML = `
-                <span class="remove-item" onclick="this.parentElement.remove()">OBRIŠI STAVKU X</span>
+                <span class="remove-item" onclick="this.parentElement.remove()">UKLONI X</span>
                 <div class="form-group">
-                    <label>Tip</label>
-                    <select class="i-type" onchange="toggleItemFields(this)">
+                    <label>Tip elementa</label>
+                    <select class="i-type" onchange="toggleFields(this)">
                         <option value="Pergola" ${data.type === 'Pergola' ? 'selected' : ''}>Pergola</option>
                         <option value="Staklo" ${data.type === 'Staklo' ? 'selected' : ''}>Stakleni Sistem</option>
                     </select>
                 </div>
-                <div class="item-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                
+                <div class="fields-grid">
                     <div class="form-group"><label>Širina (cm)</label><input type="number" class="i-w" value="${data.w || ''}" oninput="calcM2(this)"></div>
-                    <div class="form-group"><label class="label-h">Projekcija (cm)</label><input type="number" class="i-h" value="${data.h || ''}" oninput="calcM2(this)"></div>
+                    <div class="form-group"><label class="label-h">${data.type === 'Staklo' ? 'Visina' : 'Projekcija'} (cm)</label><input type="number" class="i-h" value="${data.h || ''}" oninput="calcM2(this)"></div>
                 </div>
+
+                <div class="pergola-details" style="display: ${data.type === 'Staklo' ? 'none' : 'block'}">
+                    <div class="fields-grid">
+                        <div class="form-group"><label>Visina Zadnja (cm)</label><input type="number" class="i-hr" value="${data.hr || ''}"></div>
+                        <div class="form-group"><label>Visina Prednja (cm)</label><input type="number" class="i-hf" value="${data.hf || ''}"></div>
+                        <div class="form-group"><label>Motor Strana</label><select class="i-motor"><option ${data.motor==='Levo'?'selected':''}>Levo</option><option ${data.motor==='Desno'?'selected':''}>Desno</option></select></div>
+                        <div class="form-group"><label>RAL Aluminijuma</label><input type="text" class="i-ral" value="${data.ral || ''}" placeholder="npr. 7016"></div>
+                        <div class="form-group"><label>Boja Platna</label><input type="text" class="i-fabric" value="${data.fabric || ''}" placeholder="npr. T305"></div>
+                        <div class="form-group"><label>Boja Svetla</label><select class="i-light"><option ${data.light==='Toplo'?'selected':''}>Toplo</option><option ${data.light==='Hladno'?'selected':''}>Hladno</option><option ${data.light==='RGB'?'selected':''}>RGB</option></select></div>
+                    </div>
+                </div>
+
                 <div class="m2-display">Površina: <span class="m2-val">${data.m2 || '0'}</span> m²</div>
             `;
             container.appendChild(itemDiv);
         }
 
-        function toggleItemFields(select) {
+        function toggleFields(select) {
             const box = select.closest('.item-box');
-            box.querySelector('.label-h').innerText = select.value === 'Pergola' ? 'Projekcija (cm)' : 'Visina (cm)';
+            const isGlass = select.value === 'Staklo';
+            box.querySelector('.pergola-details').style.display = isGlass ? 'none' : 'block';
+            box.querySelector('.label-h').innerText = isGlass ? 'Visina (cm)' : 'Projekcija (cm)';
         }
 
         function calcM2(input) {
@@ -207,10 +219,7 @@
             const w = box.querySelector('.i-w').value;
             const h = box.querySelector('.i-h').value;
             const display = box.querySelector('.m2-val');
-            if(w && h) {
-                const res = (w * h / 10000).toFixed(2);
-                display.innerText = res;
-            }
+            if(w && h) display.innerText = (w * h / 10000).toFixed(2);
         }
 
         function closeModal() { document.getElementById('measureModal').style.display = 'none'; }
@@ -225,7 +234,13 @@
                     type: box.querySelector('.i-type').value,
                     w: box.querySelector('.i-w').value,
                     h: box.querySelector('.i-h').value,
-                    m2: box.querySelector('.m2-val').innerText
+                    m2: box.querySelector('.m2-val').innerText,
+                    hr: box.querySelector('.i-hr').value,
+                    hf: box.querySelector('.i-hf').value,
+                    motor: box.querySelector('.i-motor').value,
+                    ral: box.querySelector('.i-ral').value,
+                    fabric: box.querySelector('.i-fabric').value,
+                    light: box.querySelector('.i-light').value
                 });
             });
 
@@ -234,7 +249,6 @@
                 client: document.getElementById('client').value,
                 location: document.getElementById('location').value,
                 phone: document.getElementById('phone').value,
-                status: document.getElementById('status').value,
                 totalPrice: document.getElementById('totalPrice').value,
                 deposit: document.getElementById('deposit').value,
                 notes: document.getElementById('notes').value,
@@ -248,7 +262,7 @@
                 projects.push(pData);
             }
 
-            localStorage.setItem('pergola_pro_v1.5', JSON.stringify(projects));
+            localStorage.setItem('pergola_measure_v1.6', JSON.stringify(projects));
             render();
             closeModal();
         }
@@ -258,20 +272,19 @@
             const search = document.getElementById('search').value.toLowerCase();
             list.innerHTML = '';
 
-            projects.filter(p => p.client.toLowerCase().includes(search)).forEach(p => {
+            projects.filter(p => p.client.toLowerCase().includes(search)).reverse().forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'measure-card';
                 card.innerHTML = `
-                    <div style="color:var(--neon-purple); font-size:0.7rem; font-weight:bold;">${p.status.toUpperCase()}</div>
-                    <div style="font-size:1.5rem; color:#fff;">${p.client}</div>
-                    <div style="font-size:0.8rem; opacity:0.6;">📍 ${p.location}</div>
-                    <div class="card-price">Cena: ${p.totalPrice || 0} € (Avans: ${p.deposit || 0} €)</div>
-                    <div style="margin-top:10px; font-size:0.8rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
-                        ${p.items.map(i => `• ${i.type}: ${i.w}x${i.h} (${i.m2} m²)`).join('<br>')}
+                    <div style="font-size:1.6rem; color:#fff; font-family:'Bebas Neue';">${p.client}</div>
+                    <div style="font-size:0.85rem; opacity:0.7;">📍 ${p.location}</div>
+                    <div style="color:var(--neon-green); font-weight:bold; margin-top:5px;">Cena: ${p.totalPrice || 0} €</div>
+                    <div style="margin-top:10px; font-size:0.8rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                        ${p.items.map(i => `• ${i.type}: ${i.w}x${i.h} cm (${i.m2} m²)`).join('<br>')}
                     </div>
                     <div style="margin-top:15px; display:flex; gap:10px;">
-                        <button onclick="openModal(${p.id})" class="btn" style="background:rgba(255,255,255,0.05); color:#fff; font-size:0.8rem;">IZMENI</button>
-                        <button onclick="exportImage(${p.id})" class="btn" style="background:var(--neon-purple); color:#fff; font-size:0.8rem;">POŠALJI SPECIFIKACIJU</button>
+                        <button onclick="openModal(${p.id})" class="btn" style="background:rgba(255,255,255,0.1); color:#fff; font-size:0.8rem;">IZMENI</button>
+                        <button onclick="exportImage(${p.id})" class="btn" style="background:var(--neon-purple); color:#fff; font-size:0.8rem;">📸 TEHNIČKI LIST</button>
                     </div>
                 `;
                 list.appendChild(card);
@@ -280,27 +293,42 @@
 
         async function exportImage(id) {
             const p = projects.find(x => x.id === id);
-            document.getElementById('s-client').innerText = p.client;
-            document.getElementById('s-loc').innerText = p.location;
-            document.getElementById('s-date').innerText = "KREIRANO: " + new Date().toLocaleDateString('sr-RS');
-            document.getElementById('s-price').innerText = `UKUPNA CENA: ${p.totalPrice} € | AVANS: ${p.deposit} €`;
-            document.getElementById('s-notes').innerText = "NAPOMENA: " + p.notes;
+            document.getElementById('s-client').innerText = p.client.toUpperCase();
+            document.getElementById('s-loc').innerText = "LOKACIJA: " + p.location;
+            document.getElementById('s-date').innerText = "DATUM MERENJA: " + new Date().toLocaleDateString('sr-RS');
+            document.getElementById('s-price').innerText = `UKUPNO: ${p.totalPrice} € | AVANS: ${p.deposit} €`;
+            document.getElementById('s-notes').innerText = "NAPOMENE: " + p.notes;
             
-            const itemsContainer = document.getElementById('s-items');
-            itemsContainer.innerHTML = '';
-            p.items.forEach((item, index) => {
-                itemsContainer.innerHTML += `
-                    <div class="sheet-item-row">
-                        <h3>STAVKA ${index+1}: ${item.type.toUpperCase()}</h3>
-                        <p style="font-size:1.4rem;">Dimenzije: <b>${item.w} cm x ${item.h} cm</b> | Površina: <b>${item.m2} m²</b></p>
+            const container = document.getElementById('s-items');
+            container.innerHTML = '';
+            
+            p.items.forEach((item, idx) => {
+                const isPergola = item.type === 'Pergola';
+                container.innerHTML += `
+                    <div class="s-item-header">STAVKA ${idx+1}: ${item.type.toUpperCase()}</div>
+                    <div class="s-grid">
+                        <div><div class="s-label">Širina</div><div class="s-val">${item.w} cm</div></div>
+                        <div><div class="s-label">${isPergola ? 'Projekcija' : 'Visina'}</div><div class="s-val">${item.h} cm</div></div>
+                        <div><div class="s-label">Površina</div><div class="s-val">${item.m2} m²</div></div>
                     </div>
+                    ${isPergola ? `
+                    <div class="s-grid">
+                        <div><div class="s-label">V. Zadnja</div><div class="s-val">${item.hr} cm</div></div>
+                        <div><div class="s-label">V. Prednja</div><div class="s-val">${item.hf} cm</div></div>
+                        <div><div class="s-label">Motor</div><div class="s-val">${item.motor}</div></div>
+                        <div><div class="s-label">RAL</div><div class="s-val">${item.ral}</div></div>
+                    </div>
+                    <div class="s-grid">
+                        <div><div class="s-label">Platno</div><div class="s-val">${item.fabric}</div></div>
+                        <div><div class="s-label">Svetlo</div><div class="s-val">${item.light}</div></div>
+                    </div>
+                    ` : ''}
                 `;
             });
 
-            const sheet = document.getElementById('tech-sheet');
-            const canvas = await html2canvas(sheet);
+            const canvas = await html2canvas(document.getElementById('tech-sheet'));
             const link = document.createElement('a');
-            link.download = `Specifikacija_${p.client}.png`;
+            link.download = `Tehnicki_List_${p.client}.png`;
             link.href = canvas.toDataURL();
             link.click();
         }
