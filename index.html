@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PERGOLA MEASURE v1.5</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --bg: #09090b;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --neon-purple: #bc13fe;
+            --neon-cyan: #00f2ff;
+            --neon-green: #39ff14;
+            --text-main: #e4e4e7;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-header: 'Bebas Neue', cursive;
+            --font-data: 'IBM Plex Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-data);
+            margin: 0; padding: 15px; min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 100%, #1e1b4b 0%, #09090b 100%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3 { font-family: var(--font-header); letter-spacing: 1px; margin: 0; }
+
+        /* DASHBOARD */
+        .search-box {
+            width: 100%; background: var(--card-bg); border: 1px solid var(--glass-border);
+            padding: 12px; border-radius: 10px; color: white; margin-bottom: 20px;
+        }
+
+        .measure-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 100px; }
+        .measure-card {
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            border-radius: 15px; padding: 15px; position: relative; backdrop-filter: blur(10px);
+        }
+
+        .card-price { color: var(--neon-green); font-weight: bold; font-size: 1.1rem; margin-top: 5px; }
+
+        /* MODAL */
+        .modal {
+            display: none; position: fixed; inset: 0; background: #000;
+            z-index: 1000; padding: 15px; overflow-y: auto;
+        }
+        .section-title { color: var(--neon-purple); border-bottom: 1px solid var(--neon-purple); margin: 20px 0 10px 0; }
+        
+        .form-group { margin-bottom: 10px; }
+        label { font-size: 0.7rem; color: #888; text-transform: uppercase; display: block; }
+        input, select, textarea {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            padding: 10px; border-radius: 8px; color: #fff; width: 100%; font-family: var(--font-data);
+        }
+
+        /* DYNAMIC ITEMS */
+        .item-box {
+            background: rgba(255,255,255,0.03); border: 1px dashed var(--neon-purple);
+            padding: 10px; border-radius: 10px; margin-bottom: 15px; position: relative;
+        }
+        .remove-item { position: absolute; top: 5px; right: 5px; color: red; font-size: 0.8rem; }
+        .m2-display { color: var(--neon-cyan); font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
+
+        .btn {
+            padding: 12px; border-radius: 8px; border: none; font-family: var(--font-header);
+            font-size: 1rem; width: 100%; cursor: pointer; text-align: center; display: block;
+        }
+        .btn-add { background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); margin: 10px 0; }
+        .btn-save { background: var(--neon-purple); color: #fff; margin-top: 20px; font-size: 1.4rem; }
+
+        .fab {
+            position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
+            background: var(--neon-purple); border-radius: 50%; border: none; font-size: 35px;
+            color: white; box-shadow: 0 0 20px rgba(188, 19, 254, 0.5); z-index: 99;
+        }
+
+        /* TECH SHEET FOR IMAGE */
+        #tech-sheet {
+            position: fixed; left: -9999px; width: 800px; background: #fff; color: #000; padding: 40px;
+        }
+        .sheet-item-row { border-bottom: 1px solid #ddd; padding: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <header style="margin-bottom: 20px;">
+        <h1 style="font-size: 2.2rem;">PERGOLA <span style="color: var(--neon-purple);">MEASURE</span></h1>
+        <div style="font-size: 0.8rem; opacity: 0.5;">PRODAJA & TEHNIČKA SPECIFIKACIJA</div>
+    </header>
+
+    <input type="text" class="search-box" id="search" placeholder="Pretraži klijente..." oninput="render()">
+
+    <div class="measure-list" id="measureList"></div>
+
+    <button class="fab" onclick="openModal()">+</button>
+
+    <!-- MODAL -->
+    <div id="measureModal" class="modal">
+        <h2>PODACI O KLIJENTU</h2>
+        <input type="hidden" id="editId">
+        
+        <div class="form-group"><label>Ime i prezime</label><input type="text" id="client"></div>
+        <div class="form-group"><label>📍 Lokacija</label><input type="text" id="location"></div>
+        <div class="form-group"><label>📞 Telefon</label><input type="tel" id="phone"></div>
+        <div class="form-group"><label>Status</label>
+            <select id="status">
+                <option value="Ponuda">Samo Ponuda</option>
+                <option value="Dogovoreno">Dogovoreno / Potpisano</option>
+                <option value="Hitno">Hitno merenje</option>
+            </select>
+        </div>
+
+        <h3 class="section-title">STAVKE (PERGOLE / STAKLA)</h3>
+        <div id="itemsContainer"></div>
+        <button class="btn btn-add" onclick="addItem()">+ DODAJ STAVKU (PERGOLA/STAKLO)</button>
+
+        <h3 class="section-title">FINANSIJE I NAPOMENA</h3>
+        <div class="form-group"><label>Dogovorena ukupna cena (€)</label><input type="number" id="totalPrice"></div>
+        <div class="form-group"><label>Plaćen avans (€)</label><input type="number" id="deposit"></div>
+        <div class="form-group"><label>Napomena</label><textarea id="notes" rows="3"></textarea></div>
+
+        <button class="btn btn-save" onclick="saveProject()">SAČUVAJ SVE</button>
+        <button class="btn" style="background:transparent; color:grey;" onclick="closeModal()">ODUSTANI</button>
+    </div>
+
+    <!-- TECH SHEET TEMPLATE -->
+    <div id="tech-sheet">
+        <div style="border-bottom: 4px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+            <h1 id="s-client" style="font-size: 2.5rem; margin:0;"></h1>
+            <p id="s-loc" style="font-size: 1.2rem; margin:5px 0;"></p>
+            <p id="s-date" style="opacity: 0.6;"></p>
+        </div>
+        <div id="s-items"></div>
+        <div style="margin-top: 30px; background: #f0f0f0; padding: 20px; border-radius: 10px;">
+            <h2 style="margin-top:0;">FINANSIJSKI PREGLED:</h2>
+            <p id="s-price" style="font-size: 1.5rem; font-weight: bold;"></p>
+            <p id="s-notes"></p>
+        </div>
+    </div>
+
+    <script>
+        let projects = JSON.parse(localStorage.getItem('pergola_pro_v1.5')) || [];
+
+        function openModal(id = null) {
+            const modal = document.getElementById('measureModal');
+            document.getElementById('itemsContainer').innerHTML = '';
+            
+            if(id) {
+                const p = projects.find(x => x.id === id);
+                document.getElementById('editId').value = p.id;
+                document.getElementById('client').value = p.client;
+                document.getElementById('location').value = p.location;
+                document.getElementById('phone').value = p.phone;
+                document.getElementById('status').value = p.status;
+                document.getElementById('totalPrice').value = p.totalPrice;
+                document.getElementById('deposit').value = p.deposit;
+                document.getElementById('notes').value = p.notes;
+                p.items.forEach(item => addItem(item));
+            } else {
+                document.getElementById('editId').value = "";
+                document.querySelectorAll('.modal input, .modal textarea').forEach(i => i.value = "");
+                addItem(); // Dodaj jednu praznu stavku odmah
+            }
+            modal.style.display = 'block';
+        }
+
+        function addItem(data = {}) {
+            const container = document.getElementById('itemsContainer');
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item-box';
+            const itemId = Date.now() + Math.random();
+            
+            itemDiv.innerHTML = `
+                <span class="remove-item" onclick="this.parentElement.remove()">OBRIŠI STAVKU X</span>
+                <div class="form-group">
+                    <label>Tip</label>
+                    <select class="i-type" onchange="toggleItemFields(this)">
+                        <option value="Pergola" ${data.type === 'Pergola' ? 'selected' : ''}>Pergola</option>
+                        <option value="Staklo" ${data.type === 'Staklo' ? 'selected' : ''}>Stakleni Sistem</option>
+                    </select>
+                </div>
+                <div class="item-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group"><label>Širina (cm)</label><input type="number" class="i-w" value="${data.w || ''}" oninput="calcM2(this)"></div>
+                    <div class="form-group"><label class="label-h">Projekcija (cm)</label><input type="number" class="i-h" value="${data.h || ''}" oninput="calcM2(this)"></div>
+                </div>
+                <div class="m2-display">Površina: <span class="m2-val">${data.m2 || '0'}</span> m²</div>
+            `;
+            container.appendChild(itemDiv);
+        }
+
+        function toggleItemFields(select) {
+            const box = select.closest('.item-box');
+            box.querySelector('.label-h').innerText = select.value === 'Pergola' ? 'Projekcija (cm)' : 'Visina (cm)';
+        }
+
+        function calcM2(input) {
+            const box = input.closest('.item-box');
+            const w = box.querySelector('.i-w').value;
+            const h = box.querySelector('.i-h').value;
+            const display = box.querySelector('.m2-val');
+            if(w && h) {
+                const res = (w * h / 10000).toFixed(2);
+                display.innerText = res;
+            }
+        }
+
+        function closeModal() { document.getElementById('measureModal').style.display = 'none'; }
+
+        function saveProject() {
+            const id = document.getElementById('editId').value;
+            const itemBoxes = document.querySelectorAll('.item-box');
+            let items = [];
+            
+            itemBoxes.forEach(box => {
+                items.push({
+                    type: box.querySelector('.i-type').value,
+                    w: box.querySelector('.i-w').value,
+                    h: box.querySelector('.i-h').value,
+                    m2: box.querySelector('.m2-val').innerText
+                });
+            });
+
+            const pData = {
+                id: id ? parseInt(id) : Date.now(),
+                client: document.getElementById('client').value,
+                location: document.getElementById('location').value,
+                phone: document.getElementById('phone').value,
+                status: document.getElementById('status').value,
+                totalPrice: document.getElementById('totalPrice').value,
+                deposit: document.getElementById('deposit').value,
+                notes: document.getElementById('notes').value,
+                items: items
+            };
+
+            if(id) {
+                const idx = projects.findIndex(x => x.id == id);
+                projects[idx] = pData;
+            } else {
+                projects.push(pData);
+            }
+
+            localStorage.setItem('pergola_pro_v1.5', JSON.stringify(projects));
+            render();
+            closeModal();
+        }
+
+        function render() {
+            const list = document.getElementById('measureList');
+            const search = document.getElementById('search').value.toLowerCase();
+            list.innerHTML = '';
+
+            projects.filter(p => p.client.toLowerCase().includes(search)).forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'measure-card';
+                card.innerHTML = `
+                    <div style="color:var(--neon-purple); font-size:0.7rem; font-weight:bold;">${p.status.toUpperCase()}</div>
+                    <div style="font-size:1.5rem; color:#fff;">${p.client}</div>
+                    <div style="font-size:0.8rem; opacity:0.6;">📍 ${p.location}</div>
+                    <div class="card-price">Cena: ${p.totalPrice || 0} € (Avans: ${p.deposit || 0} €)</div>
+                    <div style="margin-top:10px; font-size:0.8rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                        ${p.items.map(i => `• ${i.type}: ${i.w}x${i.h} (${i.m2} m²)`).join('<br>')}
+                    </div>
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <button onclick="openModal(${p.id})" class="btn" style="background:rgba(255,255,255,0.05); color:#fff; font-size:0.8rem;">IZMENI</button>
+                        <button onclick="exportImage(${p.id})" class="btn" style="background:var(--neon-purple); color:#fff; font-size:0.8rem;">POŠALJI SPECIFIKACIJU</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        async function exportImage(id) {
+            const p = projects.find(x => x.id === id);
+            document.getElementById('s-client').innerText = p.client;
+            document.getElementById('s-loc').innerText = p.location;
+            document.getElementById('s-date').innerText = "KREIRANO: " + new Date().toLocaleDateString('sr-RS');
+            document.getElementById('s-price').innerText = `UKUPNA CENA: ${p.totalPrice} € | AVANS: ${p.deposit} €`;
+            document.getElementById('s-notes').innerText = "NAPOMENA: " + p.notes;
+            
+            const itemsContainer = document.getElementById('s-items');
+            itemsContainer.innerHTML = '';
+            p.items.forEach((item, index) => {
+                itemsContainer.innerHTML += `
+                    <div class="sheet-item-row">
+                        <h3>STAVKA ${index+1}: ${item.type.toUpperCase()}</h3>
+                        <p style="font-size:1.4rem;">Dimenzije: <b>${item.w} cm x ${item.h} cm</b> | Površina: <b>${item.m2} m²</b></p>
+                    </div>
+                `;
+            });
+
+            const sheet = document.getElementById('tech-sheet');
+            const canvas = await html2canvas(sheet);
+            const link = document.createElement('a');
+            link.download = `Specifikacija_${p.client}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        render();
+    </script>
+</body>
+</html>
