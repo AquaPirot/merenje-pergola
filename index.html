@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PERGOLA MEASURE v1.9</title>
+    <title>PERGOLA PRO v2.0</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -49,8 +49,8 @@
 
         .top-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .btn-top {
-            padding: 10px; border: 1px solid var(--neon-purple); background: rgba(188, 19, 254, 0.1);
-            color: var(--neon-purple); border-radius: 8px; font-family: var(--font-header); font-size: 0.9rem; text-align: center;
+            padding: 12px; border: 1px solid var(--neon-purple); background: rgba(188, 19, 254, 0.1);
+            color: var(--neon-purple); border-radius: 10px; font-family: var(--font-header); font-size: 1rem; text-align: center; cursor: pointer;
         }
 
         /* LIST */
@@ -68,9 +68,9 @@
         .tag-done { color: var(--neon-cyan); border: 1px solid var(--neon-cyan); background: rgba(0,242,255,0.1); }
 
         .btn-call {
-            background: #16a34a; color: #fff; text-decoration: none; padding: 12px;
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; margin: 15px 0; gap: 10px;
+            background: #16a34a; color: #fff; text-decoration: none; padding: 14px;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; margin: 15px 0; gap: 10px; font-size: 1.1rem;
         }
 
         /* MODAL */
@@ -78,7 +78,7 @@
             display: none; position: fixed; inset: 0; background: #000;
             z-index: 1000; padding: 15px; overflow-y: auto;
         }
-        .form-section { border-bottom: 1px solid var(--neon-purple); margin: 20px 0 10px 0; color: var(--neon-purple); padding-bottom: 5px; }
+        .form-section { border-bottom: 1px solid var(--neon-purple); margin: 25px 0 10px 0; color: var(--neon-purple); padding-bottom: 5px; }
         .f-group { margin-bottom: 12px; }
         label { font-size: 0.65rem; color: #888; text-transform: uppercase; display: block; margin-bottom: 3px; }
         input, select, textarea {
@@ -101,19 +101,19 @@
         }
 
         /* REPORT TABLES (HIDDEN) */
-        #schedule-report, #tech-sheet { position: fixed; left: -9999px; background: #fff; color: #000; padding: 30px; width: 800px; font-family: sans-serif; }
+        #schedule-report { position: fixed; left: -9999px; background: #fff; color: #000; padding: 30px; width: 900px; font-family: sans-serif; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #f4f4f4; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <header style="margin-bottom: 15px;">
-        <h1 style="font-size: 2rem;">PERGOLA <span style="color: var(--neon-purple);">MEASURE</span></h1>
-        <div style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;">LOGISTIKA v1.9</div>
+        <h1 style="font-size: 2.2rem;">PERGOLA <span style="color: var(--neon-purple);">PRO</span></h1>
+        <div style="font-size: 0.8rem; opacity: 0.5; letter-spacing: 2px;">SISTEM ZA MERENJA v2.0</div>
     </header>
 
+    <!-- STATISTIKA -->
     <div class="stats-grid">
         <div class="stat-card"><span class="stat-val" id="stTotal">0</span><span class="stat-lbl">Ukupno</span></div>
         <div class="stat-card" style="border-color:var(--neon-orange)"><span class="stat-val" id="stTodo" style="color:var(--neon-orange)">0</span><span class="stat-lbl">Za merenje</span></div>
@@ -122,10 +122,10 @@
 
     <div class="top-btns">
         <div class="btn-top" onclick="generateSchedule()">📸 PLAN OBILAZAKA</div>
-        <div class="btn-top" onclick="exportBackup()">💾 BACKUP DATA</div>
+        <div class="btn-top" onclick="exportBackup()">💾 BACKUP (JSON)</div>
     </div>
 
-    <input type="text" class="search-box" id="search" placeholder="Pretraži (Ime ili Grad)..." oninput="render()">
+    <input type="text" class="search-box" id="search" placeholder="Pretraži klijenta ili grad..." oninput="render()">
 
     <div class="measure-list" id="measureList"></div>
 
@@ -133,19 +133,19 @@
 
     <!-- MODAL -->
     <div id="measureModal" class="modal">
-        <h2 style="color: var(--neon-purple); font-size: 1.8rem;">KLIJENT & TERMIN</h2>
+        <h2 style="color: var(--neon-purple); font-size: 2rem;">KLIJENT & TERMIN</h2>
         <input type="hidden" id="editId">
         
         <div class="f-group"><label>Ime i Prezime</label><input type="text" id="client"></div>
         <div class="grid2">
-            <div class="f-group"><label>📍 Lokacija / Grad</label><input type="text" id="location"></div>
+            <div class="f-group"><label>📍 Grad / Lokacija</label><input type="text" id="location"></div>
             <div class="f-group"><label>📞 Telefon</label><input type="tel" id="phone"></div>
         </div>
         <div class="f-group"><label>Datum Obilaska</label><input type="date" id="visitDate"></div>
 
         <h2 class="form-section">STAVKE ZA MERENJE</h2>
         <div id="itemsContainer"></div>
-        <button class="btn-top" style="width:100%; margin-bottom:20px;" onclick="addItem()">+ DODAJ STAVKU (PERGOLA/STAKLO)</button>
+        <button class="btn-top" style="width:100%; margin-bottom:20px;" onclick="addItem()">+ DODAJ STAVKU</button>
 
         <h2 class="form-section">FINANSIJE & BELEŠKE</h2>
         <div class="grid2">
@@ -154,23 +154,98 @@
         </div>
         <div class="f-group"><label>Napomena</label><textarea id="notes" rows="3"></textarea></div>
 
-        <button class="btn-main" onclick="saveProject()">SAČUVAJ ZAPISNIK</button>
+        <button class="btn-main" onclick="saveProject()">SAČUVAJ SVE</button>
         <button class="btn-main" style="background:transparent; border:1px solid #333; color:grey; margin-top:10px;" onclick="closeModal()">ODUSTANI</button>
     </div>
 
-    <!-- HIDDEN REPORT FOR IMAGE -->
+    <!-- REPORT TABLE (HIDDEN) -->
     <div id="schedule-report">
         <h1 style="border-bottom: 2px solid #000; padding-bottom: 10px;">PLAN OBILAZAKA - ZA MERENJE</h1>
         <p id="repDate"></p>
-        <table>
-            <thead><tr><th>KLIJENT</th><th>LOKACIJA / GRAD</th><th>TELEFON</th><th>NAPOMENA</th></tr></thead>
+        <table id="repTable">
+            <thead><tr><th>KLIJENT</th><th>GRAD / LOKACIJA</th><th>TELEFON</th><th>NAPOMENA</th></tr></thead>
             <tbody id="repContent"></tbody>
         </table>
     </div>
 
     <script>
-        const STORAGE_KEY = 'pergola_master_measure';
-        let projects = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        // MREŽA ZA SPAŠAVANJE PODATAKA (Proverava sve stare nazive ključeva)
+        const MASTER_KEY = 'pergola_final_storage';
+        const OLD_KEYS = [
+            'pergola_master_measure', 
+            'pergola_measure_v1.9',
+            'pergola_measure_v1.8',
+            'pergola_measure_v1.7', 
+            'pergola_measure_v1.6', 
+            'pergola_measure_v1.5',
+            'pergola_measure_v1', 
+            'pergola_merenja_data'
+        ];
+
+        function getProjects() {
+            let allFound = [];
+            // Prvo probaj glavni ključ
+            let mainData = localStorage.getItem(MASTER_KEY);
+            if (mainData) return JSON.parse(mainData);
+
+            // Ako nema, pročešljaj sve stare i spoji ih
+            OLD_KEYS.forEach(key => {
+                let data = localStorage.getItem(key);
+                if (data) {
+                    let parsed = JSON.parse(data);
+                    parsed.forEach(p => {
+                        // Spreči duplikate ako su postojali u više verzija
+                        if (!allFound.find(existing => existing.id === p.id)) {
+                            allFound.push(p);
+                        }
+                    });
+                }
+            });
+            // Sačuvaj sve pronađeno u novi MASTER_KEY da se ovo više ne dešava
+            if (allFound.length > 0) {
+                localStorage.setItem(MASTER_KEY, JSON.stringify(allFound));
+            }
+            return allFound;
+        }
+
+        let projects = getProjects();
+        const PHASES = ['Merenje', 'Proizvodnja', 'Spreman', 'Montaža'];
+
+        function render() {
+            const list = document.getElementById('measureList');
+            const search = document.getElementById('search').value.toLowerCase();
+            list.innerHTML = '';
+
+            const filtered = projects.filter(p => 
+                (p.client || "").toLowerCase().includes(search) || 
+                (p.location || "").toLowerCase().includes(search)
+            );
+            
+            filtered.slice().reverse().forEach(p => {
+                const isDone = p.items && p.items.some(i => i.w > 0);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="status-tag ${isDone ? 'tag-done' : 'tag-todo'}">${isDone ? 'Izmereno' : 'Za merenje'}</div>
+                    <div style="font-size:1.6rem; color:#fff; font-family:'Bebas Neue'; padding-right:85px;">${p.client}</div>
+                    <div style="font-size:0.85rem; opacity:0.7;">📍 ${p.location}</div>
+                    <a href="tel:${p.phone}" class="btn-call">📞 POZOVI KLIJENTA</a>
+                    <div style="font-size:0.8rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                        ${(p.items || []).map(i => `• ${i.type}: ${i.w || '?'} x ${i.h || '?'}`).join('<br>')}
+                    </div>
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <button onclick="openModal(${p.id})" class="btn-top" style="flex:2; border-color:grey; color:#fff;">IZMENI / DETALJI</button>
+                        <button onclick="deleteP(${p.id})" style="background:none; border:none; color:red; font-size:0.7rem; cursor:pointer;">OBRIŠI</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+
+            // Update statistike
+            document.getElementById('stTotal').innerText = projects.length;
+            document.getElementById('stTodo').innerText = projects.filter(p => !p.items.some(i => i.w > 0)).length;
+            document.getElementById('stDone').innerText = projects.filter(p => p.items.some(i => i.w > 0)).length;
+        }
 
         function openModal(id = null) {
             const modal = document.getElementById('measureModal');
@@ -182,10 +257,10 @@
                 document.getElementById('location').value = p.location;
                 document.getElementById('phone').value = p.phone;
                 document.getElementById('visitDate').value = p.visitDate || "";
-                document.getElementById('totalPrice').value = p.totalPrice;
-                document.getElementById('deposit').value = p.deposit;
-                document.getElementById('notes').value = p.notes;
-                p.items.forEach(item => addItem(item));
+                document.getElementById('totalPrice').value = p.totalPrice || "";
+                document.getElementById('deposit').value = p.deposit || "";
+                document.getElementById('notes').value = p.notes || "";
+                (p.items || []).forEach(item => addItem(item));
             } else {
                 document.getElementById('editId').value = "";
                 document.querySelectorAll('.modal input, .modal textarea').forEach(i => i.value = "");
@@ -198,7 +273,7 @@
             const div = document.createElement('div');
             div.className = 'item-box';
             div.innerHTML = `
-                <span style="position:absolute;top:5px;right:10px;color:red;font-size:0.7rem;" onclick="this.parentElement.remove()">OBRIŠI X</span>
+                <span style="position:absolute;top:5px;right:10px;color:red;font-size:0.7rem;cursor:pointer;" onclick="this.parentElement.remove()">OBRIŠI X</span>
                 <select class="i-type" style="margin-bottom:10px;" onchange="toggleP(this)">
                     <option value="Pergola" ${d.type==='Pergola'?'selected':''}>Pergola</option>
                     <option value="Staklo" ${d.type==='Staklo'?'selected':''}>Staklo</option>
@@ -251,66 +326,32 @@
             if(id) { projects[projects.findIndex(x => x.id == id)] = data; } 
             else { projects.push(data); }
             
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+            localStorage.setItem(MASTER_KEY, JSON.stringify(projects));
             render();
             closeModal();
-        }
-
-        function render() {
-            const list = document.getElementById('measureList');
-            const search = document.getElementById('search').value.toLowerCase();
-            list.innerHTML = '';
-
-            const filtered = projects.filter(p => p.client.toLowerCase().includes(search) || p.location.toLowerCase().includes(search));
-            
-            filtered.reverse().forEach(p => {
-                const isDone = p.items && p.items.some(i => i.w > 0);
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="status-tag ${isDone ? 'tag-done' : 'tag-todo'}">${isDone ? 'Izmereno' : 'Za merenje'}</div>
-                    <div style="font-size:1.6rem; color:#fff; font-family:'Bebas Neue'; padding-right:85px;">${p.client}</div>
-                    <div style="font-size:0.85rem; opacity:0.7;">📍 ${p.location}</div>
-                    <a href="tel:${p.phone}" class="btn-call">📞 POZOVI KLIJENTA</a>
-                    <div style="font-size:0.8rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
-                        ${p.items.map(i => `• ${i.type}: ${i.w || '?'} x ${i.h || '?'}`).join('<br>')}
-                    </div>
-                    <div style="margin-top:15px; display:flex; gap:10px;">
-                        <button onclick="openModal(${p.id})" class="btn-top" style="flex:2; border-color:grey; color:#fff;">IZMENI / DETALJI</button>
-                        <button onclick="deleteP(${p.id})" style="background:none; border:none; color:red; font-size:0.7rem;">OBRIŠI</button>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-
-            document.getElementById('stTotal').innerText = projects.length;
-            document.getElementById('stTodo').innerText = projects.filter(p => !p.items.some(i => i.w > 0)).length;
-            document.getElementById('stDone').innerText = projects.filter(p => p.items.some(i => i.w > 0)).length;
         }
 
         async function generateSchedule() {
             const todo = projects.filter(p => !p.items.some(i => i.w > 0));
             if(todo.length === 0) { alert("Nema klijenata za merenje."); return; }
-            
             document.getElementById('repDate').innerText = "DATUM: " + new Date().toLocaleDateString('sr-RS');
             const content = document.getElementById('repContent');
             content.innerHTML = '';
             todo.forEach(p => {
                 content.innerHTML += `<tr><td><b>${p.client}</b></td><td>${p.location}</td><td>${p.phone}</td><td>${p.notes}</td></tr>`;
             });
-
             const canvas = await html2canvas(document.getElementById('schedule-report'));
             const link = document.createElement('a');
-            link.download = `Plan_Merenja_${new Date().toLocaleDateString()}.png`;
+            link.download = `Plan_Obilazaka.png`;
             link.href = canvas.toDataURL();
             link.click();
         }
 
-        function deleteP(id) { if(confirm("Obriši?")) { projects = projects.filter(x => x.id !== id); localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); render(); } }
+        function deleteP(id) { if(confirm("Obriši zapisnik?")) { projects = projects.filter(x => x.id !== id); localStorage.setItem(MASTER_KEY, JSON.stringify(projects)); render(); } }
         function closeModal() { document.getElementById('measureModal').style.display = 'none'; }
         function exportBackup() {
             const data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(projects));
-            const a = document.createElement('a'); a.href = data; a.download = "backup_merenja.json"; a.click();
+            const a = document.createElement('a'); a.href = data; a.download = "backup_pergola.json"; a.click();
         }
 
         render();
